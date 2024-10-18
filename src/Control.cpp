@@ -1,8 +1,9 @@
 #include "Control.hh"
+#include <Arduino.h>
 
 
 float getDesired(float time) {
-  return 1600.0f * powf(M_E, -1.0f/3.0f * time) + 3048.0f;
+  return 167.0f * powf(M_E, -time) + 590.0f;
 }
 
 
@@ -15,9 +16,10 @@ float getControl(float desired, float predicted, float dt){
   float err = desired - predicted;
   float control = CONTROL_P * err; 
   integratorState += CONTROL_I*err*dt;
- 
+  // control += integratorState; // I included this
   control += CONTROL_BIAS;
-  if (control > UPPER_CONTROL_SATURATION) control = UPPER_CONTROL_SATURATION;
+  // Serial.println(control);
+  if (control > M_PI_2) control = M_PI_2;
   if (control < 0) control = 0;
   return control;
 }

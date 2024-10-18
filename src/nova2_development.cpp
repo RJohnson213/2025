@@ -11,6 +11,7 @@
 #include "Filter.hh"
 #include "StateMachine.hh"
 #include <climits>
+#include "ExternalSensors.hh"
 
 #ifdef SIMULINK_TESTING
   #include "SimulinkData.hh"
@@ -21,7 +22,7 @@
 #endif //SIMULINK_TESTING
 
 #define BUZZ_PIN 6
-//#define BUZZ_PIN 5 //re-route buzzer to LED
+// #define BUZZ_PIN 5 //re-route buzzer to LED
 #define BUZZ_TIME 125000 //0.125 sec
 #define PAUSE_SHORT 500000 //0.5 sec
 #define PAUSE_LONG 5000000 //5.0 sec
@@ -132,7 +133,7 @@ void setup(){
 
 #ifdef SIMULINK_TESTING
   Serial.println("Reading from simulation file");
-  simIn.startupTasks("TEST15.CSV");
+  simIn.startupTasks("TEST4.csv");
   //simIn.printData();
 #endif
 
@@ -242,10 +243,11 @@ void logging_RUN(){
             + String(attitude_estimate.getGravityVector()[0]) + String(", ") + String(attitude_estimate.getGravityVector()[1]) + String(", ") + String(attitude_estimate.getGravityVector()[2]);
 #else 
   String log = String(simTime) + String(", ") + String(rocketState) + String(", ") + String(ang) + String(", ") + String(desiredH) + String(", ") + String(predictedH) + String(", ") + String(burnoutTime) + String(", ") + String(burnoutMicros) + String(", ") + String(testStartMicros) + String(", ") + String(microsNow);
+  // String log =String(simTime) + String(", ") + String(ang);
   //String log = String(simTime) + String(", ") + String(rocketState) + String(", ") + String(stepperVars.stepsTarget) + String(", ") + String(stepperVars.currentStep) + String(", ") + String(stepperVars.direction);
+  Serial.println(log);
 #endif
 
-  sd.writeLine(log);
 }
 void logging_CLOSE(){
   //Serial.println("log close");

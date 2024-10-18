@@ -77,7 +77,7 @@ void SimulinkFile::printData() {
 }
 
 void SimulinkFile::startupTasks(){
-  startupTasks("TEST1.CSV");
+  startupTasks("TEST4.csv");
 }
 void SimulinkFile::startupTasks(const char* file){  
   if (!SD.begin(chipSelect)) {
