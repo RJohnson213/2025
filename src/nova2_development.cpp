@@ -185,13 +185,10 @@ void setup(){
   delay(1000);
   digitalWrite(BUZZ_PIN, 0);
 
-  stepper.start();
-  stepper.enable();
-  stepper.setStepsTarget(microStepsFromFlapAngle(0.39)); //this has been updated
+  servo.setAngle(0.39);
   delay(1000);
-  stepper.setStepsTarget(0);
+  servo.setAngle(0);
   delay(500);
-  stepper.disable();
 
   digitalWrite(BUZZ_PIN, 1);
   delay(1000);
