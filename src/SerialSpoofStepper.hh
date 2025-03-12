@@ -28,7 +28,6 @@ public:
   void stepForTime(unsigned long maxTime, unsigned long startingTime);
   void stepOnce(void);
   void setStepsTarget(int newTarget);
-  int microStepsFromFlapAngle(float angle);
 
   int getMoveSteps();
 private:

@@ -22,5 +22,4 @@ void SimulinkStepper::stepOnce(){
         currentStep--;
         Serial.println("-");
     }
-    delayMicroseconds(pps);
 }

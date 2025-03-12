@@ -36,14 +36,3 @@ void SerialSpoofStepper::setStepsTarget(int newTarget){
   Serial.println(newTarget);
   stepsTarget = newTarget;
 }
-
-int SerialSpoofStepper::microStepsFromFlapAngle(float angle){
-  Serial.print("Recieved Request to Convert Angle: ");
-  Serial.println(angle);
-  angle -= 0.046121116014511f;
-  float A = 103.6259f - (32.53459696f * cos(angle) + sqrt(6814.5025f - pow(43.4f +  32.53459696f * sin(angle), 2)));
-  float microSteps = ((float)MICROSTEPS) * A / 2.54f * ((float)MOTOR_STEPS);
-  Serial.print("Conversion Yielded Needed Microsteps: ");
-  Serial.println(microSteps);
-  return (int)microSteps;
-}

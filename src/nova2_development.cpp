@@ -12,6 +12,7 @@
 #include "StateMachine.hh"
 #include <climits>
 #include "ExternalSensors.hh"
+#include "RealServo.hh"
 
 #ifdef SIMULINK_TESTING
   #include "SimulinkData.hh"
@@ -38,6 +39,7 @@
 
 InterruptingStepper stepper;
 StateMachine state;
+RealServo servo;
 
 #ifdef SIMULINK_TESTING
   SimulinkFile simIn;
@@ -204,6 +206,7 @@ void setup(){
 
   testStartMicros = micros();
   startRocketRTOS();
+  servo.setAngle(0); // Initialize servo to 0 degrees
 
 }
 void determineState(){
@@ -376,6 +379,6 @@ inline void prvDoControl(){
   desiredH = getDesired(burnoutTime);
   predictedH = predictAltitude(h_filtered,vel);
   ang = getControl(desiredH, predictedH, dt);
-  stepper.setStepsTarget(microStepsFromFlapAngle(ang));
+  servo.setAngle(ang); // Set servo angle directly
 }
 
