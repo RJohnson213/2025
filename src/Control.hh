@@ -20,8 +20,7 @@ float predictAltitude(float height, float velocity);
 #define CONTROL_P       (-0.6f)
 #define CONTROL_I       (-0.005f)
 #define CONTROL_BIAS    (0.00f) //Yes this should be negative
-// #define UPPER_CONTROL_SATURATION M_PI_2
-#define UPPER_CONTROL_SATURATION (1.22) //roughly 73 degrees
+#define UPPER_CONTROL_SATURATION (M_PI_2)
  
 extern float integratorState;
 float getControl(float desired, float predicted, float dt);

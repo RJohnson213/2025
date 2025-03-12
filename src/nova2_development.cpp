@@ -185,7 +185,7 @@ void setup(){
 
   stepper.start();
   stepper.enable();
-  stepper.setStepsTarget(microStepsFromFlapAngle(0.3));
+  stepper.setStepsTarget(microStepsFromFlapAngle(0.39)); //this has been updated
   delay(1000);
   stepper.setStepsTarget(0);
   delay(500);
