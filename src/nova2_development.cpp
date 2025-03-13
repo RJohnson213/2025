@@ -5,7 +5,6 @@
 
 
 #include "RocketRTOS.hh"
-#include "InterruptingStepper.hh"
 #include "Control.hh"
 #include "QuickSilver.hh"
 #include "Filter.hh"
@@ -37,7 +36,6 @@
 
 #define G_TO_M_S2 9.8f
 
-InterruptingStepper stepper;
 StateMachine state;
 RealServo servo;
 
@@ -255,18 +253,6 @@ void logging_CLOSE(){
 }
 void logging_IDLE(){
   //Serial.println("log idle");
-}
-
-void stepper_RUN(){
-  // stepper.enable();
-  digitalWriteFast(ENABLE_PIN, MOTOR_ENABLE);
-}
-void stepper_CLOSE(){
-  //stepper.enable(); //we can assume that it went through run before getting to close, so no need to re-enable
-  stepper.setStepsTarget(0);
-}
-void stepper_IDLE(){
-  digitalWriteFast(ENABLE_PIN, MOTOR_DISABLE);
 }
 
 void buzz_PRE(){

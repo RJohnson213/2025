@@ -6,12 +6,16 @@
 #ifndef SERVO_INTERFACE_HH
 #define SERVO_INTERFACE_HH
 
+#include <Servo.h>
+
 class ServoInterface {
+protected:
+  Servo servo;
+  float currentAngle;
+
 public:
   ServoInterface();
-  virtual void setAngle(float angle)=0;
-protected:
-  float currentAngle;
+  virtual void setAngle(float angle) = 0;
 };
 
-#endif
+#endif // SERVO_INTERFACE_HH
