@@ -1,7 +1,7 @@
 #include <Arduino.h>
 
-// #define SIMULINK_TESTING
-// #define WAIT_FOR_SERIAL
+#define SIMULINK_TESTING
+#define WAIT_FOR_SERIAL
 
 
 #include "RocketRTOS.hh"
