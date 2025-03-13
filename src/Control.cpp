@@ -19,7 +19,7 @@ float getControl(float desired, float predicted, float dt){
   // control += integratorState; // I included this
   control += CONTROL_BIAS;
   // Serial.println(control);
-  if (control > M_PI_2) control = M_PI_2;
+  if (control > 140 * M_PI / 180) control = 140 * M_PI / 180;
   if (control < 0) control = 0;
   return control;
 }
