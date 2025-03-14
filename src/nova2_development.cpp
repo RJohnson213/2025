@@ -133,7 +133,7 @@ void setup(){
 
 #ifdef SIMULINK_TESTING
   Serial.println("Reading from simulation file");
-  simIn.startupTasks("TEST4.csv");
+  simIn.startupTasks("TEST2.csv");
   //simIn.printData();
 #endif
 
@@ -365,3 +365,8 @@ inline void prvDoControl(){
   servo.setAngle(ang); // Set servo angle directly
 }
 
+
+
+
+// Uncomment lines 3 and 4 if you want to switch from actuall launch to simulated launch on ground
+// Update File name on line 136 in Nova 2 and line 80 in Simulink Data.ccp
