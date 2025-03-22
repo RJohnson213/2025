@@ -1,18 +1,15 @@
 /****************************************************************************
 * ServoInterface.hh 
 * Base class for talking to a real, interrupting, or imagined servo motor
-*
+* 3/22/2025 - dropped cpp file, abstract classes are headers
 ****************************************************************************/
 #ifndef SERVO_INTERFACE_HH
 #define SERVO_INTERFACE_HH
 
 class ServoInterface {
-protected:
-//  Servo servo;
-  float currentAngle;
-
 public:
-  ServoInterface();
+  ServoInterface(){}
+  float currentAngle = 0.0f;
   virtual void setAngle(float angle) = 0;
 };
 

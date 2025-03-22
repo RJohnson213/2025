@@ -11,6 +11,7 @@ class SimulinkServo : public ServoInterface {
 public:
   SimulinkServo();
   virtual void setAngle(float angle) override;
+  float currentAngle=0.0f;
 };
 
 #endif //SIMULINK_SERVO_HH

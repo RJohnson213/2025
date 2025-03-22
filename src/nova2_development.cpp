@@ -1,6 +1,6 @@
 #include <Arduino.h>
 
-#define SIMULINK_TESTING
+//#define SIMULINK_TESTING
 #define WAIT_FOR_SERIAL
 
 
@@ -11,9 +11,9 @@
 #include "StateMachine.hh"
 #include <climits>
 #include "ExternalSensors.hh"
-#include <Servo.h>
+//#include <Servo.h>
 
-//#include "RealServo.hh"
+#include "RealServo.hh"
 
 #ifdef SIMULINK_TESTING
   #include "SimulinkData.hh"
@@ -23,8 +23,8 @@
   #include "SDLogger.hh"
 #endif //SIMULINK_TESTING
 
-#define BUZZ_PIN 6
-// #define BUZZ_PIN 5 //re-route buzzer to LED
+// #define BUZZ_PIN 6
+#define BUZZ_PIN 5 //re-route buzzer to LED
 #define BUZZ_TIME 125000 //0.125 sec
 #define PAUSE_SHORT 500000 //0.5 sec
 #define PAUSE_LONG 5000000 //5.0 sec
@@ -39,7 +39,7 @@
 #define G_TO_M_S2 9.8f
 
 StateMachine state;
-Servo servo_obj;
+RealServo servo_obj;
 
 #ifdef SIMULINK_TESTING
   SimulinkFile simIn;
@@ -105,10 +105,9 @@ void setup(){
   Serial.begin(115200);
   while(!Serial);
   Serial.println("Serial Connected");
-  Serial.println("MR HANDS IN DEEP THRUSTS");
+  Serial.println("Attaching servo...");
 #endif
-  servo_obj.attach(3); // attacha-tha-serboo
-  Serial.println("Servo Attached....");
+//  servo_obj.attach(3);
 
   pinMode(BUZZ_PIN, OUTPUT);
 
@@ -189,12 +188,14 @@ void setup(){
   digitalWrite(BUZZ_PIN, 0);
   Serial.println("Flaps out");
 //  servo_obj.setAngle(0.39);
-  servo_obj.write(2.39);
-  //currentAngle=0.39;
+//  servo_obj.write(2.39);
+//  currentAngle=0.39;
+  servo_obj.setAngle(degrees(2.39));
   delay(2000);
   //servo_obj.setAngle(0);
   Serial.println("Flaps in");
-  servo_obj.write(0);
+//  servo_obj.write(0);
+  servo_obj.setAngle(0);
   delay(500);
 
   digitalWrite(BUZZ_PIN, 1);
@@ -204,14 +205,14 @@ void setup(){
 #ifndef SIMULINK_TESTING
   sd.openFile("Acc, Vel, h_raw, h_filtered, h_ground, Ang, simT, burnoutT, State, DesiredH, PredictedH, intA, diffH, IntegralOfA, dt, 1/dt, dt_h, 1/dt_h, a_raw[0], a_raw[1], a_raw[2], a_filtered[0], a_filtered[1], a_filtered[2], g_raw[0], g_raw[1], g_raw[2], g_filtered[0], g_filtered[1], g_filtered[2], grav[0], grav[1], grav[2]");
 #else
-  sd.openFile("t, state, ang, desired, predicted, burnoutTime, burnoutMicros, testStartMicros, micros");
+  sd.openFile("t(s), state, ang, desiredApogee, predictedApogee, burnoutTime, burnoutMicros, testStartMicros, micros");
   //sd.openFile("t, state, stepsTarget, currentStep, direction");
 #endif
 
   testStartMicros = micros();
   startRocketRTOS();
-//  servo_obj.setAngle(0); // Initialize servo to 0 degrees
-  servo_obj.write(0);
+  servo_obj.setAngle(0); // Initialize servo to 0 degrees
+//  servo_obj.write(0);
 }
 void determineState(){
   state.updateState(h_filtered, vel, newAcc);
@@ -254,6 +255,7 @@ void logging_RUN(){
   //String log = String(simTime) + String(", ") + String(rocketState) + String(", ") + String(stepperVars.stepsTarget) + String(", ") + String(stepperVars.currentStep) + String(", ") + String(stepperVars.direction);
   Serial.println(log);
 #endif
+sd.writeLine(log);
 
 }
 void logging_CLOSE(){
@@ -371,8 +373,8 @@ inline void prvDoControl(){
   desiredH = getDesired(burnoutTime);
   predictedH = predictAltitude(h_filtered,vel);
   ang = getControl(desiredH, predictedH, dt);
-//  servo_obj.setAngle(ang); // Set servo angle directly
-  servo_obj.write(ang);
+  servo_obj.setAngle(ang); // Set servo angle directly
+//  servo_obj.write(ang);
   delay(200);
 }
 
