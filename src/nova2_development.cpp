@@ -1,30 +1,51 @@
-#include <Arduino.h>
+//#define FLIGHT_MODE //One stop shop, read sensors, log to SD, and buzzes.
 
+//data source selector - use simulink file or default to onboard sensors
 //#define SIMULINK_TESTING
-#define WAIT_FOR_SERIAL
+
+//data destination selector - serial print or default to SD card
+//#define WAIT_FOR_SERIAL //Note that this means the program won't run until you open a serial connection to the board.
+
+//buzzer selector or default to blessed silence. deprecated on 3.x PCBs.
+//#define BEEP
 
 
+#include <Arduino.h>
 #include "RocketRTOS.hh"
 #include "Control.hh"
 #include "QuickSilver.hh"
 #include "Filter.hh"
 #include "StateMachine.hh"
-#include <climits>
-#include "ExternalSensors.hh"
-//#include <Servo.h>
-
+//#include <climits>
 #include "RealServo.hh"
 
-#ifdef SIMULINK_TESTING
-  #include "SimulinkData.hh"
-  #include "SDSpoofer.hh"
-#else //NOT simulink testing
+#ifdef FLIGHT_MODE
   #include "ExternalSensors.hh"
   #include "SDLogger.hh"
-#endif //SIMULINK_TESTING
+  #define BUZZ_PIN 6
+#else
+  #ifdef SIMULINK_TESTING
+    #include "SimulinkData.hh" 
+    SimulinkFile simIn;
+  #else
+    #include "ExternalSensors.hh"
+    ExternalSensors sensors;
+  #endif
+  #ifdef WAIT_FOR_SERIAL
+    #include "SDSpoofer.hh"
+    SDSpoofer sd;
+  #else
+    #include "SDLogger.hh"
+    SDLogger sd;
+  #endif
+  #ifdef BEEP
+    #define BUZZ_PIN 6
+  #else
+    #define BUZZ_PIN 5
+    #endif
+#endif
 
-// #define BUZZ_PIN 6
-#define BUZZ_PIN 5 //re-route buzzer to LED
+
 #define BUZZ_TIME 125000 //0.125 sec
 #define PAUSE_SHORT 500000 //0.5 sec
 #define PAUSE_LONG 5000000 //5.0 sec
@@ -41,13 +62,6 @@
 StateMachine state;
 RealServo servo_obj;
 
-#ifdef SIMULINK_TESTING
-  SimulinkFile simIn;
-  SDSpoofer sd;
-#else
-  ExternalSensors sensors;
-  SDLogger sd;
-#endif
 
 inline void prvReadSensors();
 inline void prvIntegrateAccel();
@@ -256,7 +270,6 @@ void logging_RUN(){
   Serial.println(log);
 #endif
 sd.writeLine(log);
-
 }
 void logging_CLOSE(){
   //Serial.println("log close");
