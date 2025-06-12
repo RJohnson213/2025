@@ -1,7 +1,7 @@
 #include "ExternalSensors.hh"
 
 ExternalSensors::ExternalSensors(){
-  BMP_a = new Adafruit_BMP280((int8_t)(CSBa), &SPI);
+  BMP_a = new Adafruit_BMP280((int)(CSBa), &SPI);
   IMU_a = new MPU9250_WE(&SPI, (int)(NCSa), true);
 }
 ExternalSensors::~ExternalSensors(){
@@ -12,6 +12,15 @@ void ExternalSensors::startupTasks(){
   for(int i=0; i<3; i++){
     ExternalSensors::gyroOffsets[i] = 0;
     ExternalSensors::accOffsets[i] = 0;
+  }
+
+    int status = IMU_a->init();
+  if (status < 0) {
+    if(Serial) Serial.println("IMU initialization unsuccessful");
+    if(Serial) Serial.println("Check IMU wiring or try cycling power");
+    if(Serial) Serial.print("Status: ");
+    if(Serial) Serial.println(status);
+    while(1) {}
   }
 
   if (!BMP_a->begin()) {
@@ -31,14 +40,7 @@ void ExternalSensors::startupTasks(){
     }
     // exposeTHESENUTS = press;
     // yankTHESENUTS = pressureAlt(exposeTHESENUTS);
-  int status = IMU_a->init();
-  if (status < 0) {
-    if(Serial) Serial.println("IMU initialization unsuccessful");
-    if(Serial) Serial.println("Check IMU wiring or try cycling power");
-    if(Serial) Serial.print("Status: ");
-    if(Serial) Serial.println(status);
-    while(1) {}
-  }
+
 
 //   IMU_a->autoOffsets();
   IMU_a->setMagOpMode(AK8963_PWR_DOWN);
@@ -159,12 +161,30 @@ void ExternalSensors::calibrateOffsets(){
     accOffsets[axis] = sumAcc[axis] / ((float)CALIBRATION_LOOPS);
   }
 #else//if def STATIC_OFFSETS
-  gyroOffsets[0] = -0.07457257;
-  gyroOffsets[1] = -0.246435553;
-  gyroOffsets[2] = 1.148041487;
-  accOffsets[0] =  0.020606153;
-  accOffsets[1] = 0.086461306;
-  accOffsets[2] = -0.096222267;
+//Backup Board
+  gyroOffsets[0] = -0.148223877;
+  gyroOffsets[1] = -0.222241208;
+  gyroOffsets[2] = 1.055255771;
+  accOffsets[0] =  0.002706690;
+  accOffsets[1] = 0.071447410;
+  accOffsets[2] = -1.123871326;
 #endif //STATIC_OFFSETS
-  
+//main board offsets
+/*
+  gyroOffsets[0] = 1.426780820;
+  gyroOffsets[1] = 2.379865170;
+  gyroOffsets[2] = 1.579023480;
+  accOffsets[0] =  0.042555321;
+  accOffsets[1] = -0.014914990;
+  accOffsets[2] = -0.994094312;
+*/
+//Backup Board offsets  
+/*  
+  gyroOffsets[0] = -0.148223877;
+  gyroOffsets[1] = -0.222241208;
+  gyroOffsets[2] = 1.055255771;
+  accOffsets[0] =  0.002706690;
+  accOffsets[1] = 0.071447410;
+  accOffsets[2] = -1.123871326;
+*/
 }

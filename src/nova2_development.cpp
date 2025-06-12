@@ -1,4 +1,4 @@
-//#define FLIGHT_MODE //One stop shop, read sensors, log to SD, and buzzes.
+#define FLIGHT_MODE //One stop shop, read sensors, log to SD, and buzzes.
 
 //data source selector - use simulink file or default to onboard sensors
 //#define SIMULINK_TESTING
@@ -22,7 +22,9 @@
 #ifdef FLIGHT_MODE
   #include "ExternalSensors.hh"
   #include "SDLogger.hh"
-  #define BUZZ_PIN 6
+  #define BUZZ_PIN 6    
+  ExternalSensors sensors;
+  SDLogger sd;
 #else
   #ifdef SIMULINK_TESTING
     #include "SimulinkData.hh" 
